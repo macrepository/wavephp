@@ -1,0 +1,19 @@
+{
+    "name": "php/wavephp",
+    "description": "WavePHP is a lightweight framework built from scratch, offering the flexibility to use only what you need. It provides greater control and the ability to make modifications easily.",
+    "type": "framework",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/app",
+            "Base\\": "src/base",
+            "Test\\": "src/tests"
+        }
+    },
+    "authors": [
+        {
+            "name": "Shem",
+            "email": "macapobresshem@gmail.com"
+        }
+    ],
+    "require": {}
+}
