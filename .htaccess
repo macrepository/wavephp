@@ -1,6 +1,4 @@
-RewriteEngine On
-
-RewriteCond %{REQUEST_FILENAME} !-f 
-RewriteCond %{REQUEST_FILENAME} !-d
-
-Rewriterule ^ index.php [L]
+RewriteEngine on
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule .* /public/$0 [L]
+DirectoryIndex index.php

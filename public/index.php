@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-define("BP", __DIR__);
+define("BP", dirname(__DIR__));
 
 require BP . '/vendor/autoload.php';
 
@@ -24,5 +24,5 @@ if (Route::isRestApi()) {
     header('Content-Type: application/json; charset=utf-8');
     Route::run();
 } else {
-    Render::views('Theme/view/page', ['routerView' => Route::class]);
+    Render::views('Page/view/page', ['routerView' => Route::class]);
 }
