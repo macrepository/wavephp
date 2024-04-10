@@ -4,11 +4,56 @@ namespace Base\Router;
 
 class Route
 {
-    const REST_API = "/api/";
+    const REST_API      = "/api/";
+    const SUCCESS       = 'success';
+    const BAD_REQUEST   = 'badRequest';
+    const UNAUTHORIZED  = 'unauthorized';
+    const FORBIDDEN     = 'forbidden';
+    const NOT_FOUND     = 'notFound';
+    const CONFLICT      = 'conflict';
+    const INTERNAL_ERROR = 'internalServerError';
 
     protected static $allRoutes = [];
     protected static $method = null;
     protected static $request = [];
+
+    public static $httpResponse = [
+        self::SUCCESS => [
+            "code" => "success",
+            "status" => 200,
+            "message" => "Request processed successfully."
+        ],
+        self::BAD_REQUEST => [
+            "code" => "bad_request",
+            "status" => 400,
+            "message" => "Invalid request."
+        ],
+        self::UNAUTHORIZED => [
+            "code" => "unauthorized",
+            "status" => 401,
+            "message" => "Access denied.",
+        ],
+        self::FORBIDDEN => [
+            "code" => "forbidden",
+            "status" => 403,
+            "message" => "Forbidden."
+        ],
+        self::NOT_FOUND => [
+            "code" => "not_found",
+            "status" => 404,
+            "message" => "Resource not found."
+        ],
+        self::CONFLICT => [
+            "code" => "conflict",
+            "status" => 409,
+            "message" => "Failed to perform the request"
+        ],
+        self::INTERNAL_ERROR => [
+            "code" => "internal_server_error",
+            "status" => 500,
+            "message" => "Server error. Please try again later."
+        ]
+    ];
 
     public static function get($pattern, $fn)
     {
@@ -63,6 +108,24 @@ class Route
     public static function setStatus($code = 200)
     {
         http_response_code($code);
+    }
+
+    public static function setResponse($code, $body = null, $message = null)
+    {
+        $response = Route::$httpResponse[$code];
+
+        // Set Status
+        $status = $response['status'];
+        self::setStatus($status);
+
+        // Set Response
+        unset($response['status']);
+        if ($message) {
+            $response['message'] = $message;
+        }
+        $response['body'] = $body;
+
+        return json_encode($response);
     }
 
     private static function setMatchesData($matches)
@@ -126,7 +189,13 @@ class Route
     private static function invoke($fn, $data)
     {
         if (is_callable($fn)) {
-            echo call_user_func_array($fn, $data);
+            try {
+                echo call_user_func_array($fn, $data);
+            } catch (\Exception $e) {
+                echo self::setResponse(self::INTERNAL_ERROR, null, $e->getMessage());
+            } catch (\Throwable $t) {
+                echo self::setResponse(self::INTERNAL_ERROR, null, $t->getMessage());
+            }
         } else {
             throw new \Exception("Cannot invoke");
         }
