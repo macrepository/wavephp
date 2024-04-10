@@ -9,7 +9,15 @@ require BP . '/vendor/autoload.php';
 
 use Base\Views\Render;
 use Base\Router\Route;
+use Dotenv\Dotenv;
 
+// Load Dotenv
+$dotenv = Dotenv::createImmutable(BP);
+$dotenv->load();
+
+$dotenv->required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS'])->notEmpty();
+
+// Load routes
 $directory = BP . '/src/app/';
 
 $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
