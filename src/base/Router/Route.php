@@ -1,4 +1,5 @@
 <?php
+
 namespace Base\Router;
 
 class Route
@@ -7,6 +8,7 @@ class Route
 
     protected static $allRoutes = [];
     protected static $method = null;
+    protected static $request = [];
 
     public static function get($pattern, $fn)
     {
@@ -43,14 +45,12 @@ class Route
         $routes = self::$allRoutes[$method] ?? [];
 
         foreach ($routes as $route) {
-            if (self::match($path, $route['pattern'])) {
-                self::invoke(
-                    $route['fn'],
-                    [
-                        ['req' => self::getRequest()],
-                        ['res' => self::getResponse()]
-                    ]
-                );
+            if (self::match($path, $route['pattern'], function ($matches) {
+                self::setMatchesData($matches);
+            })) {
+                self::setReqQuery();
+                self::setReqBody();
+                self::invoke($route['fn'], [self::getRequest()]);
 
                 return;
             }
@@ -60,26 +60,67 @@ class Route
         echo "Resource page not found.";
     }
 
-    public static function setStatus ($code = 200) {
+    public static function setStatus($code = 200)
+    {
         http_response_code($code);
     }
 
-    private static function match($path, $pattern)
+    private static function setMatchesData($matches)
     {
-        if (strpos($pattern, ':') !== false) {
-            $pattern = str_replace(':', '([^/]+)', $pattern);
+        $data = array_filter($matches, function ($key) {
+            return !is_numeric($key);
+        }, ARRAY_FILTER_USE_KEY);
+
+        self::$request = [...self::$request, ...$data];
+    }
+
+    private static function setReqBody()
+    {
+        $contentType = $_SERVER["CONTENT_TYPE"] ?? '';
+        $body = [];
+
+        if (strpos($contentType, 'application/json') !== false) {
+            $body = json_decode(file_get_contents('php://input'), true);
+        } else {
+            parse_str(file_get_contents('php://input'), $body);
         }
-        return preg_match("#^$pattern$#", $path);
+
+        if (!$body) {
+            $body = $_REQUEST;
+        }
+
+        self::$request['body'] = $body;
+    }
+
+    private static function setReqQuery()
+    {
+        $queries = [];
+        parse_str($_SERVER['QUERY_STRING'], $queries);
+        self::$request['query'] = $queries;
+    }
+
+    private static function match(string $urlPath, string $registerPath, $matchesCallback = null): bool
+    {
+        $urlPath = rtrim(urldecode($urlPath), '/');
+        $registerPath = rtrim($registerPath, '/');
+
+        $pattern = preg_replace('/:([^\/]+)/', '(?P<$1>[^/]+)', $registerPath);
+
+        if (preg_match('#^' . $pattern . '$#', $urlPath, $matches)) {
+
+            if (is_callable($matchesCallback)) {
+                $matchesCallback($matches);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     private static function getRequest()
     {
-        return [1, 2, 3, 4, 5]; // Dummy data
-    }
-
-    private static function getResponse()
-    {
-        return [5, 4, 3, 2, 1]; // Dummy data
+        return self::$request;
     }
 
     private static function invoke($fn, $data)
