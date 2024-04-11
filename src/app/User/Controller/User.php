@@ -6,6 +6,7 @@ use App\User\Model\User as UserModel;
 use Base\Router\Route;
 use Base\Validation\Validate;
 use Base\Auth\Auth;
+use Base\Session\Session;
 use Illuminate\Validation\ValidationException;
 
 class User
@@ -13,6 +14,7 @@ class User
     protected $validation;
     protected $userModel;
     protected $auth;
+    protected $session;
 
     protected $userRules = [
         'name' => 'required|max:50',
@@ -25,6 +27,7 @@ class User
         $this->userModel = new UserModel();
         $this->validation = Validate::getInstance()->getValidation();
         $this->auth = new Auth();
+        $this->session = new Session();
     }
 
     public function createUser($req)
@@ -71,6 +74,13 @@ class User
         if (!$user) {
             return Route::setResponse(Route::NOT_FOUND, null, 'No records found!');
         }
+
+        $user = [
+            'data' => $user,
+            'totalCount' => $this->userModel->getTotalRowCount(),
+            'limit' => $limit,
+            'page'  => $page
+        ];
 
         return Route::setResponse(Route::SUCCESS, $user);
     }
@@ -121,6 +131,54 @@ class User
             return Route::setResponse(Route::BAD_REQUEST, null, "User not found!");
         }
 
+        return Route::setResponse(Route::SUCCESS);
+    }
+
+    public function loginUser($req)
+    {
+        $user = $req['body'] ?? null;
+
+        try {
+            $rules = [
+                'email' => $this->userRules['email'],
+                'password' => 'required|max:50'
+            ];
+            $this->validation->make($user, $rules)->validate();
+        } catch (ValidationException $e) {
+            return Route::setResponse(Route::BAD_REQUEST, $e->errors());
+        }
+
+        $userFound = $this->userModel->findByEmail($user['email']);
+
+        if (!$userFound) {
+            return Route::setResponse(Route::UNAUTHORIZED, null, 'Invalid email or password');
+        }
+
+        if(!$this->auth->verifyPassword($user['password'], $userFound['password'])) {
+            return Route::setResponse(Route::UNAUTHORIZED, null, 'Invalid email or password');
+        }
+
+        unset($userFound['password']);
+
+        $this->session->set(Session::USER_KEY, $userFound);
+
+        return Route::setResponse(Route::SUCCESS, null, 'User was logged in successfully');
+    }
+
+    public function userAccount($req)
+    {
+        $user = $this->session->get(Session::USER_KEY);
+        
+        if (!$user) {
+            return Route::setResponse(Route::UNAUTHORIZED, '', 'Please login.');
+        }
+
+        return Route::setResponse(Route::SUCCESS, $user);
+    }
+
+    public function userLogout($req) 
+    {
+        $this->session->destroy();
         return Route::setResponse(Route::SUCCESS);
     }
 }
