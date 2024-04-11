@@ -3,6 +3,7 @@
 ### Creating new extension:
 
 1) Go to `Root DIR/src/app/`
+
    * Create Folder `Xxxxx`
      * Controller: Put your controller codes here
      * Model: Put you model codes here
@@ -10,6 +11,7 @@
      * routes.php: put your routes here
 2) Routes
    Available methods: POST, GET, PATCH, DELETE
+
    Note: Ofcourse you can always add it depends on what you need. Please go to `Root DIR/src/base/Router/Route.php`
 
     sample usage:
@@ -47,12 +49,12 @@ Route::patch('/api/user/:id', function ($req) use ($user) {
 
     You can access it like this`$_ENV['DB_HOST']`
 
-    Please check`vlucas/phpdotenv repository for more information`
+    Please check vlucas/phpdotenv repository for more information
 
 
 ### Data validation
 
-Currently was using the validation from illuminate/validation. Please see their documentations.
+Currently was using the validation from `illuminate/validation`. Please see their documentations.
 
 ### Model
 
@@ -62,6 +64,6 @@ Usage
 
 ```
 use Base\Model\Db;
-```
 
 Db::getInstance()->getConn();
+```
