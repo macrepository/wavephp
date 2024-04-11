@@ -1,0 +1,15 @@
+<div class="notification">
+    <?php foreach ($notifications->getNotifications() as $key => $notification) :  ?>
+        <div class="notification__<?= $key ?>">
+            <?php foreach ($notification as $message) :  ?>
+                <div class="<?= $key ?>__message">
+                    <span><?= $message ?></span>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+<?php
+$notifications->destroyStorageAfterDisplay();
+?>
