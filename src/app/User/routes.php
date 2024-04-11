@@ -2,13 +2,35 @@
 
 use Base\Router\Route;
 use App\User\Controller\User;
-use App\User\Controller\Index;
+use App\User\Controller\Login;
+use App\User\Controller\Register;
+use App\User\Controller\Account;
 
 $user = new User();
 
-Route::get('/user', function ($req) {
-    $userIndex = new Index();
+// WEB PAGES ROUTES
+
+Route::get('/user/login', function ($req) {
+    $user = new Login($req);
+    $user->create();
 });
+
+Route::post('/user/login', function ($req) {
+    $user = new Login($req);
+    $user->post();
+});
+
+Route::get('/user/register', function ($req) {
+    $user = new Register($req);
+    $user->create();
+});
+
+Route::get('/user/account', function ($req) {
+    $user = new Account($req);
+    $user->create();
+});
+
+// USER API ENDPOINTS
 
 Route::post('/api/user/login', function ($req) use ($user) {
     return $user->loginUser($req);
@@ -22,7 +44,8 @@ Route::get('/api/user/logout', function ($req) use ($user) {
     return $user->userLogout($req);
 });
 
-// CRUD OPERATION
+// CRUD OPERATION API ENDPOINTS
+
 Route::post('/api/user', function ($req) use ($user) {
     return $user->createUser($req);
 });

@@ -1,0 +1,24 @@
+<div class="login container">
+    <?php
+        $notification->render();
+    ?>
+    <div class="login__title">
+        <span>User Login</span>
+    </div>
+    <form action="/user/login" method="POST" class="form login__form">
+        <div class="form__group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" class="form__input">
+        </div>
+        <div class="form__group">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" class="form__input">
+        </div>
+        <div class="form__actions">
+            <button class="btn btn--primary">Login</button>
+        </div>
+    </form>
+    <div class="login__footer">
+        <span>No account yet? <a href="/user/register">Register Here</a></span>
+    </div>
+</div>

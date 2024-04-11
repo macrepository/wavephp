@@ -128,6 +128,12 @@ class Route
         return json_encode($response);
     }
 
+    public static function redirect($url)
+    {
+        header("Location: $url");
+        exit();
+    }
+
     private static function setMatchesData($matches)
     {
         $data = array_filter($matches, function ($key) {
