@@ -11,7 +11,6 @@ use App\User\Controller\User as UserApi;
 
 class Login
 {
-
     const VIEWS = "User/view/login";
 
     protected $request;
@@ -46,6 +45,7 @@ class Login
 
         if (!$result) {
             $this->messageManager->setErrorMessage("Error user login");
+            return Route::redirect('/user/login');
         }
 
         if ($result['code'] == Route::SUCCESS) {

@@ -25,6 +25,11 @@ Route::get('/user/register', function ($req) {
     $user->create();
 });
 
+Route::post('/user/register', function ($req) {
+    $user = new Register($req);
+    $user->post();
+});
+
 Route::get('/user/account', function ($req) {
     $user = new Account($req);
     $user->create();

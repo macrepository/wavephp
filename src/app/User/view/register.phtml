@@ -1,8 +1,11 @@
 <div class="login container">
+    <?php
+    $data['notifications']->render();
+    ?>
     <div class="login__title">
         <span>User Registration</span>
     </div>
-    <form class="form login__form">
+    <form action="/user/register" method="POST" class="form login__form">
         <div class="form__group">
             <label for="name">Name</label>
             <input type="text" name="name" id="name" class="form__input">
