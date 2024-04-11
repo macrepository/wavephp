@@ -7,7 +7,6 @@ use Base\Views\Render;
 
 class MessageManager
 {
-
     const STORAGE_KEY = 'message_manager';
     const SUCCESS = 'success';
     const ERROR = 'error';
@@ -15,6 +14,7 @@ class MessageManager
     const NOTIFICATION = 'notification';
 
     const VIEWS = 'Page/view/notification';
+    const VIEWS_KEY = 'notifications';
 
     protected $session;
 
@@ -85,6 +85,6 @@ class MessageManager
 
     public function render()
     {
-        return Render::views(self::VIEWS, ["notifications" => $this]);
+        return Render::views(self::VIEWS);
     }
 }

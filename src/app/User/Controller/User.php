@@ -154,7 +154,7 @@ class User
             return Route::setResponse(Route::UNAUTHORIZED, null, 'Invalid email or password');
         }
 
-        if(!$this->auth->verifyPassword($user['password'], $userFound['password'])) {
+        if (!$this->auth->verifyPassword($user['password'], $userFound['password'])) {
             return Route::setResponse(Route::UNAUTHORIZED, null, 'Invalid email or password');
         }
 
@@ -168,7 +168,7 @@ class User
     public function userAccount($req)
     {
         $user = $this->session->get(Session::USER_KEY);
-        
+
         if (!$user) {
             return Route::setResponse(Route::UNAUTHORIZED, '', 'Please login.');
         }
@@ -176,7 +176,7 @@ class User
         return Route::setResponse(Route::SUCCESS, $user);
     }
 
-    public function userLogout($req) 
+    public function userLogout()
     {
         $this->session->destroy();
         return Route::setResponse(Route::SUCCESS);

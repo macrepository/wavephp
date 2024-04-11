@@ -30,6 +30,12 @@ Route::get('/user/account', function ($req) {
     $user->create();
 });
 
+Route::get('/user/logout', function ($req) {
+    $user = new Account($req);
+    $user->logout();
+});
+
+
 // USER API ENDPOINTS
 
 Route::post('/api/user/login', function ($req) use ($user) {
@@ -41,7 +47,7 @@ Route::get('/api/user/account', function ($req) use ($user) {
 });
 
 Route::get('/api/user/logout', function ($req) use ($user) {
-    return $user->userLogout($req);
+    return $user->userLogout();
 });
 
 // CRUD OPERATION API ENDPOINTS

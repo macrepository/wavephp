@@ -36,7 +36,7 @@ class Login
 
     public function create()
     {
-        return Render::views(self::VIEWS, ["user" => [], "notification" => $this->messageManager]);
+        return Render::views(self::VIEWS);
     }
 
     public function post()

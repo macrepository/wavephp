@@ -1,5 +1,5 @@
 <div class="notification">
-    <?php foreach ($notifications->getNotifications() as $key => $notification) :  ?>
+    <?php foreach ($data['notifications']->getNotifications() as $key => $notification) :  ?>
         <div class="notification__<?= $key ?>">
             <?php foreach ($notification as $message) :  ?>
                 <div class="<?= $key ?>__message">
@@ -11,5 +11,5 @@
 </div>
 
 <?php
-$notifications->destroyStorageAfterDisplay();
+$data['notifications']->destroyStorageAfterDisplay();
 ?>

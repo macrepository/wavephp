@@ -6,8 +6,8 @@ use Base\Views\Render;
 use Base\Session\Session;
 use Base\Router\Route;
 
-class Register {
-
+class Register
+{
     const VIEWS = "User/view/register";
 
     protected $request;
@@ -19,13 +19,14 @@ class Register {
         $this->request = $request;
         $this->session = new Session();
         $this->user = $this->session->get(Session::USER_KEY);
-        
+
         if ($this->user) {
             Route::redirect('/user/account');
         }
     }
 
-    public function create() {
-        return Render::views(self::VIEWS, ["user" => [1,2,3,4,5]]);
+    public function create()
+    {
+        return Render::views(self::VIEWS);
     }
 }

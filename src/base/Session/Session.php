@@ -4,6 +4,8 @@ namespace Base\Session;
 class Session {
     const USER_KEY = 'user';
 
+    const VIEWS_KEY = 'session';
+
     public static function start() {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();

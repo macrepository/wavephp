@@ -13,7 +13,13 @@
     <header>
         <nav>
             <span>Header Section</span>
-            <a href="/user/login">User Login</a>
+
+            <?php if ($data['session']['user']) : ?>
+                <a href="/user/account">User Account</a>
+                <a href="/user/logout">User Logout</a>
+            <?php else : ?>
+                <a href="/user/login">User Login</a>
+            <?php endif ?>
         </nav>
     </header>
     <main>
