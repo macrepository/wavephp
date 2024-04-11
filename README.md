@@ -14,7 +14,7 @@
 
    Note: Ofcourse you can always add it depends on what you need. Please go to `Root DIR/src/base/Router/Route.php`
 
-    sample usage:
+   sample usage:
 
 ```
 <?php
@@ -42,15 +42,13 @@ Route::patch('/api/user/:id', function ($req) use ($user) {
 });
 ```
 
-
 ### Setting Environment Varaibles
 
 1. Go to `Root DIR/.env`
 
-    You can access it like this`$_ENV['DB_HOST']`
+   You can access it like this `$_ENV['DB_HOST']`
 
-    Please check vlucas/phpdotenv repository for more information
-
+   Please check vlucas/phpdotenv repository for more information
 
 ### Data validation
 
@@ -58,7 +56,7 @@ Currently was using the validation from `illuminate/validation`. Please see thei
 
 ### Model
 
-Currently was using PDO+mysql. 
+Currently was using PDO+mysql.
 
 Usage
 
@@ -67,3 +65,11 @@ use Base\Model\Db;
 
 Db::getInstance()->getConn();
 ```
+
+
+
+### Public folder
+
+1. Go to `Root DIR/public`
+
+   Add your public files here like css, images, etc
