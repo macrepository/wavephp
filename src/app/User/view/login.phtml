@@ -1,24 +1,32 @@
-<div class="login container">
+<div class="login container d-flex justify-content-center">
     <?php
-        $data['notifications']->render();
+    $data['notifications']->render();
     ?>
-    <div class="login__title">
-        <span>User Login</span>
-    </div>
-    <form action="/user/login" method="POST" class="form login__form">
-        <div class="form__group">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" class="form__input">
+    <div class="w-50">
+        <div class="text-center mb-4">
+            <h3>User Login</h3>
         </div>
-        <div class="form__group">
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" class="form__input">
-        </div>
-        <div class="form__actions">
-            <button class="btn btn--primary">Login</button>
-        </div>
-    </form>
-    <div class="login__footer">
-        <span>No account yet? <a href="/user/register">Register Here</a></span>
+        <form action="/user/login" method="POST" class="form login__form">
+            <div class="row mb-3">
+                <label for="email" class="col-sm-2 col-form-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" name="email" id="email" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="password" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-sm-10">
+                    <input type="password" name="password" id="password" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-10 d-flex justify-content-between align-items-center">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <span>No account yet? <a href="/user/register">Register Here</a></span>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

@@ -1,0 +1,39 @@
+<div>
+    <?php
+    $data['notifications']->render();
+    ?>
+    <div class="text-center">
+        <h3><?= ucfirst($data['action']) ?> Product</h3>
+    </div>
+    <form action="<?= $data['url'] ?>" method="POST">
+        <div class="row mb-3">
+            <label for="name" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" name="name" id="name" class="form-control" value="<?= $data['product']['name'] ?? '' ?>">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="category" class="col-sm-2 col-form-label">Category</label>
+            <div class="col-sm-10">
+                <input type="text" name="category" id="category" class="form-control" value="<?= $data['product']['category'] ?? '' ?>">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="quantity" class="col-sm-2 col-form-label">Quantity</label>
+            <div class="col-sm-10">
+                <input type="number" name="quantity" id="quantity" class="form-control" value="<?= $data['product']['quantity'] ?? '' ?>">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="price" class="col-sm-2 col-form-label">Price</label>
+            <div class="col-sm-10">
+                <input type="number" name="price" id="price" class="form-control" value="<?= $data['product']['price'] ?? '' ?>">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-secondary">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>

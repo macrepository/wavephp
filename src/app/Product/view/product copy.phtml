@@ -1,0 +1,185 @@
+<div>
+    <div>
+        <?php $data['notifications']->render(); ?>
+    </div>
+    <div>
+        <div class="input-group mb-3">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input id="searchProduct" name="searchProduct" type="text" class="form-control border-start-0 border-end-0" placeholder="Search..." onkeyup="searchProduct(this)">
+            <span class="input-group-text" id="clearSearch" role="button" onclick="clearSearchInput()"><i class="bi bi-x-circle-fill"></i></span>
+        </div>
+        <div>
+            <table class="table table-bordered border-dark">
+                <thead>
+                    <tr class="table-dark">
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="productTableData">
+                    <!-- Body row data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center">
+            <ul id="pagination" class="pagination">
+                <!-- Pagination will be inserted here -->
+            </ul>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="modalPoup" tabindex="-1" aria-labelledby="modalPoupLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <p>Are you sure you want to DELETE?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" onclick="removeProduct(this)">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var popup;
+    var modalPopup;
+    var inputSearchProduct = '';
+
+    const pageSize = 5;
+    const maxPageControl = 3;
+
+    document.addEventListener("DOMContentLoaded", () => {
+        displayProducts(inputSearchProduct, 1);
+        popup = document.getElementById('modalPoup');
+        modalPopup = new bootstrap.Modal(popup, {
+            keyboard: false
+        });
+    });
+
+    async function displayProducts(search, currentPage) {
+        const response = await getProducts(search, currentPage, pageSize);
+        if (!response) {
+            noResult();
+            return;
+        }
+
+        renderProducts(response.body.data);
+        renderPagination(currentPage, Math.ceil(response.body.totalCount / pageSize));
+    }
+
+    function searchProduct(element) {
+        inputSearchProduct = element.value;
+        displayProducts(inputSearchProduct, 1);
+    }
+
+    function clearSearchInput() {
+        inputSearchProduct = '';
+        document.getElementById('searchProduct').value = inputSearchProduct;
+        displayProducts(inputSearchProduct, 1);
+    }
+
+    function noResult() {
+        const productView = document.getElementById('productTableData');
+        productView.innerHTML = '';
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+    }
+
+    function renderProducts(products) {
+        const productView = document.getElementById('productTableData');
+        const rows = products.map(product => `
+            <tr>
+                <td>${product.name}</td>
+                <td>${product.category}</td>
+                <td>${product.quantity}</td>
+                <td>${product.price}</td>
+                <td class="text-center">
+                    <a class="btn btn-primary" href="/product/edit/${product.id}">Edit</a>
+                    <span class="vr"></span>
+                    <button class="btn btn-danger" onclick="confirmDeletion(${product.id})">Delete</button>
+                </td>
+            </tr>
+        `).join('');
+        productView.innerHTML = rows;
+    }
+
+    function renderPagination(currentPage, totalPages) {
+        const pagination = document.getElementById('pagination');
+        if (totalPages <= 1) {
+            pagination.innerHTML = '';
+        } else {
+            pagination.innerHTML = createPaginationControls(currentPage, totalPages);
+        }
+    }
+
+    function createPaginationControls(currentPage, maxPage) {
+        let controls = '';
+        if (currentPage > 1) {
+            controls += `<li class="page-item"><a href="#" class="page-link" onclick="prevPageControl(${currentPage - 1})">Prev</a></li>`;
+        }
+
+        let startPage = Math.floor((currentPage - 1) / maxPageControl) * maxPageControl + 1;
+        for (let i = startPage; i < startPage + maxPageControl && i <= maxPage; i++) {
+            controls += `<li class="page-item"><a href="#" class="page-link ${i === currentPage ? 'active' : ''}" onclick="showPageControl(${i})">${i}</a></li>`;
+        }
+
+        if (currentPage < maxPage) {
+            controls += `<li class="page-item"><a href="#" class="page-link" onclick="nextPageControl(${currentPage + 1})">Next</a></li>`;
+        }
+        return controls;
+    }
+
+    function prevPageControl(prevPage) {
+        displayProducts(inputSearchProduct, prevPage);
+    }
+
+    function showPageControl(controlPage) {
+        displayProducts(inputSearchProduct, controlPage);
+    }
+
+    function nextPageControl(nextPage) {
+        displayProducts(inputSearchProduct, nextPage);
+    }
+
+    async function getProducts(search, page, limit) {
+        const params = new URLSearchParams({
+            search,
+            page,
+            limit
+        });
+        try {
+            const response = await fetch(`/api/product?${params}`, {
+                method: 'GET'
+            });
+            if (!response.ok) throw new Error("HTTP error, status = " + response.status);
+            return await response.json();
+        } catch (error) {
+            console.error("Error fetching data", error);
+        }
+    }
+
+    function confirmDeletion(productId) {
+        if (popup && modalPopup) {
+            modalPopup.show(popup);
+        } else {
+            var response = confirm("Are you sure you want to DELETE?");
+            if (response) {
+                console.log("User clicked OK.");
+            }
+        }
+
+        console.log("Removing product", productId);
+        // Additional code to handle the product deletion
+    }
+
+    function removeProduct(el) {
+
+    }
+</script>
