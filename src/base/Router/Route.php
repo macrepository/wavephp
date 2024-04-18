@@ -198,9 +198,13 @@ class Route
             try {
                 echo call_user_func_array($fn, $data);
             } catch (\Exception $e) {
-                echo self::setResponse(self::INTERNAL_ERROR, null, $e->getMessage());
+                echo self::setResponse(self::INTERNAL_ERROR, null, $e->getMessage()) . "<br>";
+                echo "File: " . $e->getFile() . "<br>";
+                echo "Line: " . $e->getLine() . "<br>";
             } catch (\Throwable $t) {
-                echo self::setResponse(self::INTERNAL_ERROR, null, $t->getMessage());
+                echo self::setResponse(self::INTERNAL_ERROR, null, $t->getMessage()) . "<br>";
+                echo "File: " . $t->getFile() . "<br>";
+                echo "Line: " . $t->getLine() . "<br>";
             }
         } else {
             throw new \Exception("Cannot invoke");
